@@ -1,0 +1,4 @@
+config_version: config_4
+trainable_weights: classifier
+convo_format: paired_next_stage
+model_fpath: baichuan-inc/Baichuan-7B

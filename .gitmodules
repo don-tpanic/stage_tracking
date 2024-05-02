@@ -1,0 +1,3 @@
+[submodule "model_zoo/Baichuan_7B"]
+	path = model_zoo/Baichuan_7B
+	url = git@github.com:don-tpanic/Baichuan-7B.git

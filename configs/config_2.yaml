@@ -1,0 +1,4 @@
+config_version: config_2
+trainable_weights: all
+convo_format: paired
+model_fpath: bert-base-chinese 

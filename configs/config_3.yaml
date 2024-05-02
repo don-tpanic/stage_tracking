@@ -1,0 +1,11 @@
+config_version: config_3
+trainable_weights: all
+convo_format: paired_next_stage
+model_fpath: bert-base-chinese
+load_in_8bit: False
+load_in_fp16: False
+fp16_training: False
+deepspeed: False
+per_device_train_batch_size: 8
+per_device_eval_batch_size: 8
+gradient_accumulation_steps: 1
