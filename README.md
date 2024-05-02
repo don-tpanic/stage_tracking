@@ -6,4 +6,9 @@ To keep track of the stage of a user-assistant dialog based on standardised SOP 
 
 ### Current solutions
 1. Text classification (`run_text_cls.py`) - fine-tuning LMs to predict the current/future stage of a dialog given chat history.
-2. Constrained generation (`run_constrained_gen.py`) - fine-tuning LMs to generate in natural language the current/future stage of a given dialog. 
+2. Constrained generation (`run_constrained_gen.py`) - fine-tuning LMs to generate in natural language the current/future stage of a given dialog.
+
+### To work with this repo:
+```
+git clone git@github.com:don-tpanic/stage_tracking.git --recursive
+```
