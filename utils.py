@@ -135,5 +135,59 @@ def load_model_and_tokenizer(
             )
             model = get_peft_model(model, peft_config)
             model.print_trainable_parameters()
+
+    elif task == 'const-gen':
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_fpath,
+            use_auth_token=True,
+            trust_remote_code=True,
+        )
+        if 'Baichuan' in model_fpath:
+            print(f"pad_token: {tokenizer.pad_token}, pad_token_id: {tokenizer.pad_token_id}")
+            print(f"eos_token: {tokenizer.eos_token}, eos_token_id: {tokenizer.eos_token_id}")
+            tokenizer.model_max_length = config["model_max_length"]
+            if config["load_in_8bit"]:
+                load_in_8bit = True
+                device_map = 'auto'
+            if config["load_in_fp16"]:
+                torch_dtype = torch.float16
+            if config["deepspeed"]:
+                device_map = None  
+
+        if tokenizer_only:
+            return tokenizer
+        
+        # Model
+        model = transformers.AutoModelForCausalLM.from_pretrained(
+            model_fpath,
+            load_in_8bit=load_in_8bit,
+            torch_dtype=torch_dtype,
+            device_map=device_map,
+            use_auth_token=True,
+            trust_remote_code=True,
+        )
+
+        if config['trainable_weights'] == 'lora':
+            print("Trainable weights: LoRA")
+            if load_in_8bit:
+                # LoRA + 8-bit training
+                model = prepare_model_for_int8_training(
+                    model, 
+                    use_gradient_checkpointing=config["use_gradient_checkpointing"]
+                )
+
+            peft_config = LoraConfig(
+                task_type="CAUSAL_LM", 
+                inference_mode=False, 
+                r=8,                        
+                lora_alpha=32,              
+                lora_dropout=0.1,
+                target_modules=config["target_modules"],
+            )
+            model = get_peft_model(model, peft_config)
+            model.print_trainable_parameters()
+
+    for name, param in model.named_parameters():
+        print(name, param.dtype, param.shape, param.requires_grad)
     
     return model, tokenizer
